@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inicio — Chatbot Cloud SMR</title>
+  <meta name="description" content="Chatbot de soporte técnico básico con RapidAPI y GitHub Pages. Interfaz moderna, responsive y accesible." />
+  <link rel="stylesheet" href="estilo.css" />
+  <link rel="icon" href="favicon.ico" />
+  <style>
+    /* Mejoras específicas del inicio (puedes mover a estilo.css si prefieres) */
+    .hero {
+      position: relative;
+      padding: 64px 24px;
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(217,32,39,0.18), transparent 60%),
+                  radial-gradient(900px 500px at 90% 0%, rgba(122,12,16,0.18), transparent 60%),
+                  linear-gradient(180deg, var(--bg), var(--bg-2));
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(0deg, rgba(0,0,0,0.12), rgba(0,0,0,0.12));
+      pointer-events: none;
+    }
+    .hero-content {
+      max-width: 980px;
+      margin: 0 auto;
+      text-align: center;
+      animation: fadeInUp 0.6s ease-out both;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.2;
+      margin-bottom: 12px;
+      letter-spacing: 0.2px;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: clamp(16px, 2.2vw, 18px);
+      max-width: 780px;
+      margin: 0 auto 18px;
+    }
+    .hero-actions {
+      display: flex; gap: 12px; justify-content: center; margin-top: 18px;
+    }
+    .features, .how, .demo, .cta {
+      padding: 28px 24px;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .features h2, .how h2, .demo h2, .cta h2 {
+      font-size: 24px; margin-bottom: 14px;
+    }
+    .grid {
+      display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0,1fr));
+    }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    .card { transition: transform var(--transition), box-shadow var(--transition); }
+    .card:hover { transform: translateY(-2px); }
+    .card h3 { margin-bottom: 8px; font-size: 18px; }
+    .steps {
+      display: grid; gap: 10px; counter-reset: step;
+      margin: 0; padding: 0; list-style: none;
+    }
+    .steps li {
+      background: #111113; border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 12px 14px; box-shadow: 0 6px 16px var(--shadow);
+      position: relative;
+    }
+    .steps li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute; left: -10px; top: -10px;
+      width: 28px; height: 28px; border-radius: 999px;
+      display: grid; place-items: center; font-weight: 700; color: #fff;
+      background: var(--accent-2); border: 2px solid var(--accent);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+    .gallery {
+      display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0,1fr));
+    }
+    .gallery img {
+      width: 100%; aspect-ratio: 16/9; object-fit: cover;
+      border-radius: var(--radius); border: 1px solid var(--border);
+      box-shadow: 0 8px 24px var(--shadow); background: #0f0f11;
+    }
+    @media (max-width: 900px) { .gallery { grid-template-columns: 1fr; } }
+    .cta {
+      text-align: center;
+      background: linear-gradient(180deg, #101012, #0d0d10);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+    .cta p { color: var(--muted); margin: 6px 0 14px; }
+    .navbar {
+      backdrop-filter: saturate(120%) blur(6px);
+      background: rgba(22,22,24,0.75);
+    }
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: '';
+      position: absolute; left: 10px; right: 10px; bottom: 2px; height: 2px;
+      background: transparent; border-radius: 2px; transition: background var(--transition);
+    }
+    .nav-link:hover::after, .nav-link.active::after { background: var(--accent); }
+    .toolbar {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .toggle {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #151517; border: 1px solid var(--border); color: var(--text);
+      padding: 6px 10px; border-radius: 999px; cursor: pointer;
+      font-size: 13px; transition: border var(--transition), background var(--transition);
+    }
+    .toggle:hover { border-color: var(--accent); background: #1c1c1f; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Reveal progresivo en scroll (IntersectionObserver requiere JS, esto es el estado visible) */
+    .reveal { opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+  <!-- Barra superior -->
+  <header class="navbar" role="navigation" aria-label="Navegación principal">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">▮</span>
+      <span class="title">Chatbot Cloud SMR</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#inicio" class="nav-link active">Inicio</a>
+      <a href="complemento.html" class="nav-link">Chat</a>
+      <a href="extras.html" class="nav-link">FAQs</a>
+    </nav>
+    <div class="toolbar">
+      <span id="conn-status" class="badge online" title="Estado de conexión">Online</span>
+      <button id="theme-toggle" class="toggle" type="button" aria-pressed="false">
+        <span>Modo</span><strong>Oscuro</strong>
+      </button>
+    </div>
+  </header>
+
+  <!-- Contenido -->
+  <main id="inicio">
+    <!-- Hero principal -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Soporte técnico inteligente en la nube</h1>
+        <p>Resuelve dudas de informática básica con un chatbot rápido y moderno. Sin servidores, sin fricción: RapidAPI + GitHub Pages.</p>
+        <div class="hero-actions">
+          <a href="complemento.html" class="btn btn-accent" aria-label="Probar el chatbot">Probar el chatbot</a>
+          <a href="extras.html" class="btn btn-outline" aria-label="Ver preguntas frecuentes">Preguntas frecuentes</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Beneficios -->
+    <section class="features reveal" aria-labelledby="features-title">
+      <h2 id="features-title">¿Por qué usar Chatbot Cloud SMR?</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>✅ Sin infraestructura</h3>
+          <p>Consume IA vía RapidAPI (SaaS/API as a Service). Olvídate de servidores y despliegues complejos.</p>
+        </article>
+        <article class="card">
+          <h3>🚀 Publicación instantánea</h3>
+          <p>GitHub Pages como hosting estático: accesible desde cualquier navegador y sin coste.</p>
+        </article>
+        <article class="card">
+          <h3>💬 Experiencia cuidada</h3>
+          <p>Diseño responsive, preguntas rápidas, historial persistente y exportación de conversaciones.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Cómo funciona -->
+    <section class="how reveal" aria-labelledby="how-title">
+      <h2 id="how-title">¿Cómo funciona?</h2>
+      <ol class="steps">
+        <li><strong>Escribe tu pregunta</strong> sobre IP, RAM, DNS, almacenamiento, etc.</li>
+        <li><strong>El chatbot responde</strong> usando una API alojada en la nube.</li>
+        <li><strong>Guarda o exporta</strong> la conversación cuando lo necesites.</li>
+      </ol>
+    </section>
+
+    <!-- Capturas o demostración -->
+    <section class="demo reveal" aria-labelledby="demo-title">
+      <h2 id="demo-title">Capturas del proyecto</h2>
+      <div class="gallery" role="list">
+        <img role="listitem" src="capturas de proyecto/3.png" alt="Inicio" loading="lazy" />
+        <img role="listitem" src="capturas de proyecto/1.png" alt="chatbot" loading="lazy" />
+        <img role="listitem" src="capturas de proyecto/2.png" alt="FAQs" loading="lazy" />
+      </div>
+    </section>
+
+    <!-- CTA final -->
+    <section class="cta reveal" aria-labelledby="cta-title">
+      <h2 id="cta-title">¿Listo para probarlo?</h2>
+      <p>Haz clic y comienza a chatear con tu asistente técnico en la nube.</p>
+      <a href="complemento.html" class="btn btn-primary" aria-label="Ir al chatbot">Ir al chatbot</a>
+    </section>
+  </main>
+
+  <!-- Pie -->
+  <footer class="footer" role="contentinfo">
+    <small>Proyecto académico SMR — RapidAPI + GitHub Pages. Diseño por Isaac.</small>
+  </footer>
+
+  <!-- Lógica global y extras del inicio -->
+  <script src="funciones.js"></script>
+  <script>
+    // Scroll suave intra-página
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const id = a.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+          a.classList.add('active');
+        }
+      });
+    });
+
+    // Revelado progresivo al hacer scroll
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => io.observe(el));
+
+    // Pequeña bienvenida inmersiva (solo visual, no rompe accesibilidad)
+    window.addEventListener('load', () => {
+      try {
+        if (typeof toast === 'function') {
+          toast('Bienvenido — soy Marlos, tu asistente técnico', 'info');
+        }
+      } catch (e) { /* no crítico */ }
+    });
+
+    // Tema claro variables (si quieres expandir en estilo.css)
+    const styleLight = document.createElement('style');
+    styleLight.textContent = `
+      :root[data-theme="light"] {
+        --bg: #f6f7f9;
+        --bg-2: #ffffff;
+        --text: #1b1b1c;
+        --muted: #55585e;
+        --border: #dde0e6;
+        --shadow: rgba(0,0,0,0.12);
+      }
+      :root[data-theme="light"] .navbar { background: rgba(255,255,255,0.85); }
+      :root[data-theme="light"] .card, :root[data-theme="light"] .steps li { background: #ffffff; }
+      :root[data-theme="light"] .hero { background: linear-gradient(180deg, #f6f7f9, #ffffff); }
+      :root[data-theme="light"] .cta { background: linear-gradient(180deg, #ffffff, #f6f7f9); }
+      :root[data-theme="light"] .gallery img { background: #f8f9fb; }
+    `;
+    document.head.appendChild(styleLight);
+  </script>
+</body>
+</html>
+</body>
+</html>
+      :root[data-theme="light"] .cta { background: linear-gradient(180deg, #ffffff, #f6f7f9); }
+      :root[data-theme="light"] .gallery img { background: #f8f9fb; }
+    `;
+    document.head.appendChild(styleLight);
+  </script>
+</body>
+</html>

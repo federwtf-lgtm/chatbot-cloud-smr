@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Extras — Chatbot Cloud SMR</title>
+  <link rel="stylesheet" href="estilo.css" />
+  <link rel="icon" href="favicon.ico" />
+  <style>
+    /* Animaciones específicas de extras */
+    .faq-list li {
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeInUp 0.5s ease forwards;
+    }
+    .faq-list li:nth-child(1) { animation-delay: 0.1s; }
+    .faq-list li:nth-child(2) { animation-delay: 0.2s; }
+    .faq-list li:nth-child(3) { animation-delay: 0.3s; }
+    .faq-list li:nth-child(4) { animation-delay: 0.4s; }
+    .faq-list li:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .form-group input {
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: #161618;
+      color: var(--text);
+      transition: border var(--transition);
+    }
+    .form-group input:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+    .guide ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+    }
+    .guide li {
+      background: #111113;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      box-shadow: 0 6px 16px var(--shadow);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar" role="navigation" aria-label="Navegación principal">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">▮</span>
+      <span class="title">Chatbot Cloud SMR</span>
+    </div>
+    <nav class="nav-links">
+      <a href="inicio.html" class="nav-link">Inicio</a>
+      <a href="complemento.html" class="nav-link">Chat</a>
+      <a href="extras.html" class="nav-link active">Extras</a>
+    </nav>
+    <div class="toolbar">
+      <span id="conn-status" class="badge online" title="Estado de conexión">Online</span>
+      <button id="theme-toggle" class="toggle" type="button" aria-pressed="false">
+        <span>Modo</span><strong>Oscuro</strong>
+      </button>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="layout">
+    <!-- FAQs -->
+    <section class="card">
+      <h2>FAQs rápidas</h2>
+      <ul class="faq-list">
+        <li><button class="faq" data-preset="¿Cómo configuro DNS en Windows 10?">🔧 Configurar DNS en Windows 10</button></li>
+        <li><button class="faq" data-preset="¿Qué diferencia hay entre IPv4 e IPv6?">🌐 IPv4 vs IPv6</button></li>
+        <li><button class="faq" data-preset="¿Cómo comprobar la velocidad de mi disco?">💾 Velocidad de disco</button></li>
+        <li><button class="faq" data-preset="¿Qué es un driver y cómo actualizarlo?">⚙️ Drivers</button></li>
+        <li><button class="faq" data-preset="¿Cómo ver procesos que consumen memoria?">💻 Procesos y RAM</button></li>
+      </ul>
+      <div class="actions">
+        <a class="btn btn-accent" href="complemento.html">Lanzar en chat</a>
+      </div>
+    </section>
+
+    <!-- Ajustes -->
+    <section class="card">
+      <h2>Ajustes de API (RapidAPI)</h2>
+      <div class="form-group">
+        <label for="api-key">API Key (X-RapidAPI-Key)</label>
+        <input type="password" id="api-key" placeholder="Pega aquí tu clave" />
+      </div>
+      <div class="form-group">
+        <label for="api-host">API Host</label>
+        <input type="text" id="api-host" placeholder="example-chatbot-api.p.rapidapi.com" />
+      </div>
+      <div class="form-group">
+        <label for="api-url">Endpoint URL</label>
+        <input type="text" id="api-url" placeholder="https://example-chatbot-api.p.rapidapi.com/chat" />
+      </div>
+      <div class="actions">
+        <button id="save-settings" class="btn btn-primary">Guardar ajustes</button>
+        <button id="reset-settings" class="btn btn-outline">Reset</button>
+        <button id="test-api" class="btn btn-accent">Probar conexión</button>
+      </div>
+    </section>
+
+    <!-- Guía de uso -->
+    <section class="card guide">
+      <h2>Guía de uso</h2>
+      <ul>
+        <li>Usa preguntas cortas y claras para obtener mejores respuestas.</li>
+        <li>Prueba las FAQs si no sabes qué preguntar.</li>
+        <li>Exporta tu conversación en TXT o JSON desde el chat.</li>
+        <li>Atajos: Enter para enviar, Ctrl+L para limpiar.</li>
+        <li>Configura tu API Key en Ajustes para usar tu propia suscripción.</li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <small>Extras — FAQs y Ajustes de API. Proyecto académico SMR.</small>
+  </footer>
+
+  <!-- JS -->
+  <script src="funciones.js"></script>
+  <script>
+    const testBtn = document.getElementById('test-api');
+    if (testBtn) {
+      testBtn.addEventListener('click', async () => {
+        const apiUrl = document.getElementById('api-url').value.trim();
+        const apiHost = document.getElementById('api-host').value.trim();
+        const apiKey = document.getElementById('api-key').value.trim();
+
+        if (!apiUrl || !apiHost || !apiKey) {
+          alert("Completa todos los campos antes de probar la conexión.");
+          return;
+        }
+
+        try {
+          const res = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json',
+              'X-RapidAPI-Key': apiKey,
+              'X-RapidAPI-Host': apiHost
+            },
+            body: JSON.stringify({ prompt: "test" })
+          });
+          if (res.ok) {
+            alert("Conexión exitosa con la API.");
+          } else {
+            alert("Error en la conexión: " + res.status);
+          }
+        } catch (err) {
+          alert("No se pudo conectar: " + err.message);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

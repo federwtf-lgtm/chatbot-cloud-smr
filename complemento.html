@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat — Chatbot Cloud SMR</title>
+  <link rel="stylesheet" href="estilo.css" />
+  <link rel="icon" href="favicon.ico" />
+  <style>
+    /* Animaciones específicas del chat */
+    .chat-container .message {
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeInUp 0.4s ease forwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .sidebar .card { animation: fadeIn 0.6s ease both; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* Botón flotante para móvil */
+    .sidebar-toggle {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 50px; height: 50px;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+      z-index: 2000;
+    }
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .sidebar.open { display: block; position: fixed; top: 0; right: 0; width: 80%; height: 100%; background: #111113; overflow-y: auto; z-index: 1500; }
+      .sidebar-toggle { display: block; }
+    }
+
+    /* Botón volver arriba */
+    #scroll-top {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: var(--accent-2);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+      z-index: 2000;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar" role="navigation" aria-label="Navegación principal">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">▮</span>
+      <span class="title">Chatbot Cloud SMR</span>
+    </div>
+    <nav class="nav-links">
+      <a href="inicio.html" class="nav-link">Inicio</a>
+      <a href="complemento.html" class="nav-link active">Chat</a>
+      <a href="extras.html" class="nav-link">FAQs</a>
+    </nav>
+    <div class="toolbar">
+      <span id="conn-status" class="badge online" title="Estado de conexión">Online</span>
+      <button id="theme-toggle" class="toggle" type="button" aria-pressed="false">
+        <span>Modo</span><strong>Oscuro</strong>
+      </button>
+    </div>
+  </header>
+
+  <!-- Layout principal -->
+  <main class="layout-single">
+    <!-- Área de chat -->
+    <section class="chat-area" aria-live="polite">
+      <div id="chat-container" class="chat-container">
+        <!-- ...removed static welcome message to avoid duplication; JS will render Marlos cuando sea necesario... -->
+      </div>
+
+      <!-- Indicador de escritura -->
+      <div id="typing" class="typing hidden">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="typing-text">El bot está escribiendo…</span>
+      </div>
+
+      <!-- Composer -->
+      <form id="composer" class="composer" autocomplete="off">
+        <input type="text" id="user-input" class="input" placeholder="Escribe tu pregunta…" aria-label="Entrada de mensaje" />
+        <button id="send-btn" class="btn btn-accent" type="submit">Enviar</button>
+      </form>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <section class="card">
+        <h2>Preguntas rápidas</h2>
+        <div class="tags">
+          <button class="tag" data-preset="¿Qué es una dirección IP?">🌐 IP</button>
+          <button class="tag" data-preset="¿Qué significa DNS?">🔧 DNS</button>
+          <button class="tag" data-preset="¿Cómo saber cuánta RAM tiene mi PC?">💻 RAM</button>
+          <button class="tag" data-preset="¿Diferencia entre HDD y SSD?">💾 HDD vs SSD</button>
+          <button class="tag" data-preset="¿Cómo limpiar archivos temporales en Windows?">🧹 Temporales</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Acciones</h2>
+        <div class="actions">
+          <button id="clear-chat" class="btn btn-outline">Reiniciar chat</button>
+          <button id="export-chat" class="btn btn-primary">Exportar TXT</button>
+          <button id="export-json" class="btn btn-primary">Exportar JSON</button>
+          <button id="export-pdf" class="btn btn-primary">Exportar PDF</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Tips de uso</h2>
+        <ul class="faq-list">
+          <li>Usa preguntas cortas y claras.</li>
+          <li>Prueba las preguntas rápidas si no sabes qué escribir.</li>
+          <li>Recuerda que puedes exportar tu conversación.</li>
+          <li>En móvil, abre/cierra el menú con el botón flotante.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Estadísticas</h2>
+        <p>Total de mensajes: <span id="msg-count">0</span></p>
+      </section>
+    </aside>
+  </main>
+
+  <!-- Botón flotante para móvil -->
+  <button class="sidebar-toggle">☰</button>
+
+  <!-- Botón volver arriba -->
+  <button id="scroll-top">↑ Arriba</button>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <small>Chat de soporte técnico básico — RapidAPI + GitHub Pages.</small>
+  </footer>
+
+  <!-- JS -->
+  <script src="funciones.js"></script>
+  <script>
+    // Sidebar toggle en móvil
+    const sidebarToggle = document.querySelector('.sidebar-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebarToggle && sidebar) {
+      sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+    }
+
+    // Botón volver arriba
+    const scrollTopBtn = document.getElementById('scroll-top');
+    if (scrollTopBtn) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+          scrollTopBtn.style.display = 'block';
+        } else {
+          scrollTopBtn.style.display = 'none';
+        }
+      });
+      scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+  </script>
+</body>
+</html>
+    }
+  </script>
+</body>
+</html>
